@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <!-- bootstap -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.5/css/bootstrap.css">
+    <!-- https://leafletjs.com/examples/quick-start/ -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin=""/>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+    crossorigin=""></script>
+    <title>Express Demo</title>
+  </head>
+  <body>
+      <div class = 'jumbotron container myjumbo'>
+        <h1> Location Photo and Tracker</h1>
+        <h1 id='myH1'></h1>
+        <p id='myP1'></p>
+        <div class='row container'>
+            <div class='col-md-6 col-lg-6 cols-sm-6 container'><img src='' id='myImg' class='myimg'></div>
+            <div class='col-md-6 col-lg-6 cols-sm-6 container' id='map'></div>
+        </div>
+        <h1 id='feelings'></h1>
+      
+      </div>
+    
+          </div>
+    <div class='jumbotron container'>
+      <form class='my_form'>
+        <div class='form-group'>
+          <label for="date">Give Date for Picture</label>
+          <input id="date" class="form-control" type="text">
+          <label for="feel">How do you feel today</label>
+          <input id="feel" class="form-control" type="text">
+        </div>
+        <br>
+        <center><button id = "form-button" class='btn btn-primary btn-lg'  type="submit">Show Location Pics</button></center><br/>
+        <center><button id = "show-all" class='btn btn-primary btn-lg'>Show All Location Check-In's</button></center><br/>
+
+        <p></p>
+      </form>
+    </div>
+    <script type="text/javascript" src="js/script.js"></script>
+  </body>
+</html>

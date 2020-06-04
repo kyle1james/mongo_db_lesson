@@ -1,0 +1,16 @@
+html, body {
+    height: 100%;
+ }
+#myImg{
+    height: 30em;
+}
+
+.myjumbo{
+    margin-top: 5em;
+    text-align: center;
+    background-color: white;
+}
+
+#map { 
+    height: 40em;
+ }
