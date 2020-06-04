@@ -17,7 +17,6 @@
 async function success(pos) {
   const lat = pos.coords.latitude.toFixed(4);
   const lon = pos.coords.longitude.toFixed(4);
-  const date = document.getElementById('date');
   const feel = document.getElementById('feel');
   const mymap = mapInit(lat, lon);
   nasaApi(lat, lon);
@@ -36,7 +35,7 @@ async function mapInit(lat, lon) {
 
   }).addTo(mymap);
   for (let idx = 0; idx < jdata.length; idx++) {
-    L.marker([parseFloat(jdata[idx].lat), parseFloat(jdata[idx].lon)]).addTo(mymap);
+    L.marker([parseFloat(jdata[idx].lat), parseFloat(jdata[idx].lon)]).addTo(mymap).bindPopup('User Information Here').openPopup();
   }
   const marker = L.marker([lat, lon]).addTo(mymap);
 
@@ -49,7 +48,8 @@ async function nasaApi(lat, lon) {
   const res = await fetch(url);
   const data = await res.json();
   console.log(data);
-  document.getElementById('myH1').textContent = `Photo Date ${data.date}`;
+  const cleanDate = data.date.slice(0,10);
+  document.getElementById('myH1').textContent = `Photo Date ${cleanDate}`;
   document.getElementById('myImg').src = data.url;
   // document.getElementById('feelings').textContent = feel.value;
 }
