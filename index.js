@@ -29,26 +29,24 @@ app.get('/', (req, res) => {
 const uri = `mongodb+srv://${username}:${mongopass}@cluster0.3uy96.mongodb.net/<dbname>?retryWrites=true&w=majority`;
 MongoClient.connect(uri, { useUnifiedTopology: true })
   .then((client) => {
-    // create db and collection
     console.log('Connected to Database');
-    const db = client.db('locateFeelings');
-    const feelingsLocation = db.collection('feelingsLocation');
+    const db = client.db('mapApp');
+    const locationNotes = db.collection('locationNotes');
 
     // POST
-    app.get('/space/:lat/:lon', async (req, res) => {
-      const { lat, lon } = req.params;
-      const url = `https://api.nasa.gov/planetary/earth/assets?lon=${lon}&lat=${lat}&dim=0.10&api_key=${NasaApiKey}`;
-      const data = await fetch(url);
-      const jdata = await data.json();
-      feelingsLocation.insertOne({ lat, lon });
-      res.json(jdata);
+    app.get('/location/:lat/:lon/:notes', async (req, res) => {
+      const { lat, lon, notes } = req.params;
+      console.log(lat, lon, notes);
+      console.log('noootteesss', notes);
+      locationNotes.insertOne({ lat, lon, notes });
+      res.redirect('/');
     });
 
     // READ
     app.get('/show', (req, res) => {
       console.log('get');
       // Read from DB
-      db.collection('feelingsLocation').find().toArray()
+      db.collection('locationNotes').find().toArray()
         .then((results) => {
           console.log(results);
           res.json(results);

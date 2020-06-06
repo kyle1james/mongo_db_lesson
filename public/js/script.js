@@ -3,6 +3,12 @@
 //   locationAPIS();
 // }
 
+// hold all your user information
+// init as None
+// Have students clean up code by using this obj
+
+let cordObj = {};
+
 (function locationAPIS() {
   if ('geolocation' in navigator) {
     document.getElementById('myH1').textContent = 'Allow Geolocation to run site';
@@ -17,16 +23,16 @@
 async function success(pos) {
   const lat = pos.coords.latitude.toFixed(4);
   const lon = pos.coords.longitude.toFixed(4);
-  const feel = document.getElementById('feel');
+  cordObj.lat = lat;
+  cordObj.lon = lon;
   const mymap = mapInit(lat, lon);
-  nasaApi(lat, lon);
 }
 // create map
 async function mapInit(lat, lon) {
   const url = '/show';
   const data = await fetch(url);
-  const jdata = await data.json();
-  console.log(jdata);
+  const locationData = await data.json();
+  console.log(locationData);
   // add locate user funcntion geolocation
   const mymap = L.map('map').setView([lat, lon], 12);
   // api call to mapbox
@@ -34,26 +40,21 @@ async function mapInit(lat, lon) {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 
   }).addTo(mymap);
-  for (let idx = 0; idx < jdata.length; idx++) {
-    L.marker([parseFloat(jdata[idx].lat), parseFloat(jdata[idx].lon)]).addTo(mymap).bindPopup('User Information Here').openPopup();
+  for (let idx = 0; idx < locationData.length; idx++) {
+    L.marker([parseFloat(locationData[idx].lat), parseFloat(locationData[idx].lon)]).addTo(mymap).bindPopup(locationData[idx].notes).openPopup();
   }
-  const marker = L.marker([lat, lon]).addTo(mymap);
-
+  //const marker = L.marker([lat, lon]).addTo(mymap).bindPopup('Add a note here in the form below!').openPopup();
   return mymap;
 }
 
-// get satellite photo
-async function nasaApi(lat, lon) {
-  const url = `/space/${lat}/${lon}`;
-  const res = await fetch(url);
-  const data = await res.json();
-  console.log(data);
-  const cleanDate = data.date.slice(0,10);
-  document.getElementById('myH1').textContent = `Photo Date ${cleanDate}`;
-  document.getElementById('myImg').src = data.url;
-  // document.getElementById('feelings').textContent = feel.value;
+async function addData(event) {
+  const note = document.getElementById('note').value;
+  console.log(note);
+  url = `/location/${cordObj.lat}/${cordObj.lon}/${note}`;
+  resp = await fetch(url);
+  console.log('done');
 }
 
-
-// document.getElementById('form-button').addEventListener('click', main);
-// document.getElementById('show-all').addEventListener('click', map());
+// obj to hold lat/lon
+console.log(cordObj);
+document.getElementById('form-button').addEventListener('click', addData);
