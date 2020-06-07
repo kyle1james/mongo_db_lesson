@@ -2,6 +2,7 @@
 // init as None
 // Have students clean up code by using this obj
 
+
 const cordObj = {};
 
 (function locationAPIS() {
@@ -43,19 +44,54 @@ async function mapInit() {
 
 async function addData() {
   const note = document.getElementById('note').value;
-  console.log(note);
-  url = `/location/${cordObj.lat}/${cordObj.lon}/${note}`;
-  resp = await fetch(url);
-  console.log('done');
+  // update
+  if (cordObj.lastClicked != null) {
+    console.log(cordObj.lastClicked);
+    cordObj.note = note;
+    const id = cordObj.lastClicked;
+    const userInfo = {id ,note};
+    
+    const options = {
+      method: "POST",
+      body: JSON.stringify(userInfo),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    };
+
+    const resp = await fetch('/update', options);
+  } else {
+    // Post
+    console.log(note);
+    const url = `/location/${cordObj.lat}/${cordObj.lon}/${note}`;
+    const resp = await fetch(url);
+    console.log('done');
+  }
 }
 
 // add path to edit/del
 document.body.addEventListener('click', (evt) => {
   if (evt.target.className === 'leaflet-marker-icon leaflet-zoom-animated leaflet-interactive') {
     console.log(evt.target.id);
+    cordObj.lastClicked = evt.target.id;
+    document.getElementById('form-lable').textContent = 'Write a new responses or delete';
+    document.getElementById('form-id').style.backgroundColor = '#bfd0d9';
   }
 }, false);
 
 
+function changeForm() {
+  if (document.getElementById('form-lable').textContent === 'Write a new responses or delete') {
+    document.getElementById('form-lable').textContent = 'Add Your Location Information';
+    document.getElementById('form-id').style.backgroundColor = '#eceeef';
+  } else {
+    document.getElementById('form-lable').textContent = 'Write a new responses or delete';
+    document.getElementById('form-id').style.backgroundColor = '#bfd0d9';
+  }
+  return false;
+}
+
+
 // obj to hold lat/lon
 document.getElementById('form-button').addEventListener('click', addData);
+document.getElementById('change-form-button').addEventListener('click', changeForm);

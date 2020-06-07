@@ -5,7 +5,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 4000;
 // read form data
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+const {ObjectId} = require('mongodb');
+
 app.use(express.static('public'));
 
 // dotenv
@@ -39,6 +41,22 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
       locationNotes.insertOne({ lat, lon, notes });
       res.redirect('/');
     });
+    // PUT
+    app.post('/update', (req, res) => {
+      console.log("updating!!!");
+      console.log(req.body)
+      const data = req.body;
+      console.log(data);
+      locationNotes.findOneAndUpdate(
+        { _id: ObjectId(data.id) },
+        {
+          $set: {
+            notes: data.note,
+          },
+        },
+      );
+      res.redirect('/');
+    });
 
     // READ
     app.get('/show', (req, res) => {
@@ -46,7 +64,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
       // Read from DB
       db.collection('locationNotes').find().toArray()
         .then((results) => {
-          console.log(results);
+          //console.log(results);
           res.json(results);
         })
         .catch((err) => console.log(err));
