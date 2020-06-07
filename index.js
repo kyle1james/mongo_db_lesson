@@ -11,12 +11,10 @@ app.use(express.static('public'));
 // dotenv
 require('dotenv').config();
 // NASA API KEY
-const NasaApiKey = process.env.NASA;
 const mongopass = process.env.MONGOPASS;
-const dbname = process.env.DBNAME;
 const username = process.env.USERNAME;
 // node fetch
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch');
 // listen
 app.listen(port, () => console.log('Running on port 4000'));
 // mongodb

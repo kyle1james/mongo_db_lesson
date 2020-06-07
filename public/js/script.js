@@ -1,13 +1,8 @@
-// function main(e) {
-//   e.preventDefault();
-//   locationAPIS();
-// }
-
 // hold all your user information
 // init as None
 // Have students clean up code by using this obj
 
-let cordObj = {};
+const cordObj = {};
 
 (function locationAPIS() {
   if ('geolocation' in navigator) {
@@ -20,31 +15,30 @@ let cordObj = {};
 }());
 
 // success calls map init
-async function success(pos) {
-  const lat = pos.coords.latitude.toFixed(4);
-  const lon = pos.coords.longitude.toFixed(4);
-  cordObj.lat = lat;
-  cordObj.lon = lon;
-  const mymap = mapInit(lat, lon);
+function success(pos) {
+  cordObj.lat = pos.coords.latitude.toFixed(4);
+  cordObj.lon = pos.coords.longitude.toFixed(4);
+  mapInit();
 }
 // create map
-async function mapInit(lat, lon) {
-  const url = '/show';
-  const data = await fetch(url);
-  const locationData = await data.json();
-  console.log(locationData);
+async function mapInit() {
   // add locate user funcntion geolocation
-  const mymap = L.map('map').setView([lat, lon], 12);
-  // api call to mapbox
+  const mymap = L.map('map').setView([cordObj.lat, cordObj.lon], 12);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 
   }).addTo(mymap);
+  const url = '/show';
+  const data = await fetch(url);
+  const locationData = await data.json();
+  console.log(locationData);
+  // add markers
   for (let idx = 0; idx < locationData.length; idx++) {
-    L.marker([parseFloat(locationData[idx].lat), parseFloat(locationData[idx].lon)]).addTo(mymap).bindPopup(locationData[idx].notes).openPopup();
+    const m = L.marker([parseFloat(locationData[idx].lat), parseFloat(locationData[idx].lon)]).addTo(mymap).bindPopup(locationData[idx].notes).openPopup();
+    m._icon.id = locationData[idx]._id;
   }
-  //const marker = L.marker([lat, lon]).addTo(mymap).bindPopup('Add a note here in the form below!').openPopup();
-  return mymap;
+  L.marker([cordObj.lat, cordObj.lon]).addTo(mymap).bindPopup('You are currently here. Add note below.').openPopup();
+  //return mymap;
 }
 
 async function addData(event) {
@@ -55,6 +49,13 @@ async function addData(event) {
   console.log('done');
 }
 
+// add path to edit/del
+document.body.addEventListener('click', (evt) => {
+  if (evt.target.className === "leaflet-marker-icon leaflet-zoom-animated leaflet-interactive") {
+    console.log(evt.target.id);
+  }
+}, false);
+
+
 // obj to hold lat/lon
-console.log(cordObj);
 document.getElementById('form-button').addEventListener('click', addData);
