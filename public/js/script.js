@@ -38,7 +38,8 @@ async function mapInit() {
     const m = L.marker([parseFloat(locationData[idx].lat), parseFloat(locationData[idx].lon)]).addTo(mymap).bindPopup(locationData[idx].notes).openPopup();
     m._icon.id = locationData[idx]._id;
   }
-  L.marker([cordObj.lat, cordObj.lon]).addTo(mymap).bindPopup('You are currently here. Add note below.').openPopup();
+  //m = L.marker([cordObj.lat, cordObj.lon]).addTo(mymap).bindPopup("Add data in form").openPopup();
+
   // return mymap;
 }
 
@@ -49,14 +50,14 @@ async function addData() {
     console.log(cordObj.lastClicked);
     cordObj.note = note;
     const id = cordObj.lastClicked;
-    const userInfo = {id ,note};
-    
+    const userInfo = { id, note };
+
     const options = {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify(userInfo),
       headers: {
-        "Content-Type": "application/json"
-      }
+        'Content-Type': 'application/json',
+      },
     };
 
     const resp = await fetch('/update', options);

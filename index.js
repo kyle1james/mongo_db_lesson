@@ -1,31 +1,26 @@
 import express from 'express';
-
+// for how we send json, i.e not from a form.
 const bodyParser = require('body-parser');
 
 const app = express();
 const port = 4000;
-// read form data
 app.use(bodyParser.json());
-const {ObjectId} = require('mongodb');
-
 app.use(express.static('public'));
-
 // dotenv
 require('dotenv').config();
-// NASA API KEY
-const mongopass = process.env.MONGOPASS;
-const username = process.env.USERNAME;
-// node fetch
-// const fetch = require('node-fetch');
 // listen
 app.listen(port, () => console.log('Running on port 4000'));
-// mongodb
+// mongodb globals
 const { MongoClient } = require('mongodb');
 
+const mongopass = process.env.MONGOPASS;
+const username = process.env.USERNAME;
+const { ObjectId } = require('mongodb');
+// home
 app.get('/', (req, res) => {
   res.sendFile(path.join(`${__dirname}/index.html`));
 });
-
+// connect to db
 const uri = `mongodb+srv://${username}:${mongopass}@cluster0.3uy96.mongodb.net/<dbname>?retryWrites=true&w=majority`;
 MongoClient.connect(uri, { useUnifiedTopology: true })
   .then((client) => {
@@ -36,15 +31,11 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
     // POST
     app.get('/location/:lat/:lon/:notes', async (req, res) => {
       const { lat, lon, notes } = req.params;
-      console.log(lat, lon, notes);
-      console.log('noootteesss', notes);
       locationNotes.insertOne({ lat, lon, notes });
       res.redirect('/');
     });
     // PUT
     app.post('/update', (req, res) => {
-      console.log("updating!!!");
-      console.log(req.body)
       const data = req.body;
       console.log(data);
       locationNotes.findOneAndUpdate(
@@ -60,11 +51,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
     // READ
     app.get('/show', (req, res) => {
-      console.log('get');
       // Read from DB
       db.collection('locationNotes').find().toArray()
         .then((results) => {
-          //console.log(results);
           res.json(results);
         })
         .catch((err) => console.log(err));
