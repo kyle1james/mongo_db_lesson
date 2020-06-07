@@ -38,10 +38,10 @@ async function mapInit() {
     m._icon.id = locationData[idx]._id;
   }
   L.marker([cordObj.lat, cordObj.lon]).addTo(mymap).bindPopup('You are currently here. Add note below.').openPopup();
-  //return mymap;
+  // return mymap;
 }
 
-async function addData(event) {
+async function addData() {
   const note = document.getElementById('note').value;
   console.log(note);
   url = `/location/${cordObj.lat}/${cordObj.lon}/${note}`;
@@ -51,7 +51,7 @@ async function addData(event) {
 
 // add path to edit/del
 document.body.addEventListener('click', (evt) => {
-  if (evt.target.className === "leaflet-marker-icon leaflet-zoom-animated leaflet-interactive") {
+  if (evt.target.className === 'leaflet-marker-icon leaflet-zoom-animated leaflet-interactive') {
     console.log(evt.target.id);
   }
 }, false);
